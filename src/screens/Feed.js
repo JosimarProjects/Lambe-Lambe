@@ -3,9 +3,6 @@ import Post from "../components/Post";
 import { FlatList, StyleSheet, View } from "react-native";
 import Header from "../components/Header";
 
-
-
-
 class Feed extends Component {
     state = {
         posts: [
@@ -14,34 +11,22 @@ class Feed extends Component {
                 nickname: "fulano de tal",
                 email: "a@a.com",
                 image: require("../../assets/imgs/fence.jpg"),
-                comments: [{
-                    nickname: "beltrano de tal",
-                    comment: "Legal"
-                },
-                {
-                    nickname: "ciclano de tal",
-                    comment: "Legal tal"
-                }
+                comments: [
+                    { nickname: "beltrano de tal", comment: "Legal" },
+                    { nickname: "ciclano de tal", comment: "Legal tal" }
                 ]
-
             },
             {
                 id: Math.random(),
                 nickname: "fulano de tal",
                 email: "a@a.com",
                 image: require("../../assets/imgs/bw.jpg"),
-                comments: [{
-                    nickname: "beltrano de tal",
-                    comment: "Legal"
-                },
-                {
-                    nickname: "ciclano de tal",
-                    comment: "Legal tal"
-                }
+                comments: [
+                    { nickname: "beltrano de tal", comment: "Legal" },
+                    { nickname: "ciclano de tal", comment: "Legal tal" }
                 ]
             }
         ]
-
     }
 
     render() {
@@ -50,10 +35,9 @@ class Feed extends Component {
                 <Header />
                 <FlatList
                     data={this.state.posts}
-                    keyExtractor={item => { item => `${item.id}` }}
-                    renderItem={({ item }) => <Post key={item.id} {...item} />}
+                    keyExtractor={item => `${item.id}`}
+                    renderItem={({ item }) => <Post {...item} />}
                 />
-
             </View>
         )
     }
@@ -68,4 +52,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Feed
+export default Feed;
