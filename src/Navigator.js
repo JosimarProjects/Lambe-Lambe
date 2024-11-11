@@ -13,19 +13,21 @@ const Stack = createStackNavigator();
 
 function LoginOrProfileStack() {
     return (
-        <Stack.Navigator initialRouteName="Profile">
-            <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="userProfile" component={Profile} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} options={{ title: 'Register' }} />
         </Stack.Navigator>
     );
 }
 
-const AuthRouter = () => (
+/*const AuthRouter = () => (
     <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} options={{ title: 'Login' }} />
         <Stack.Screen name="Register" component={Register} options={{ title: 'Register' }} />
+
     </Stack.Navigator>
-);
+);*/
 
 
 const Tab = createBottomTabNavigator();
@@ -33,7 +35,7 @@ const Tab = createBottomTabNavigator();
 function Navigator() {
     return (
         <NavigationContainer>
-            <Tab.Navigator initialRouteName="Feed" screenOptions={{ showLabel: true }}>
+            <Tab.Navigator initialRouteName="Profile" screenOptions={{ showLabel: true }}>
                 <Tab.Screen
                     name="Feed"
                     component={Feed}
@@ -52,7 +54,7 @@ function Navigator() {
                 />
                 <Tab.Screen
                     name="Profile"
-                    component={AuthRouter}
+                    component={LoginOrProfileStack}
                     options={{
                         tabBarIcon: ({ color }) => <Icon name="user" size={30} color={color} />,
                         title: 'Perfil',
