@@ -1,45 +1,27 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import Post from "../components/Post";
 import { FlatList, StyleSheet, View } from "react-native";
 import Header from "../components/Header";
 
 class Feed extends Component {
-    state = {
-        posts: [
-            {
-                id: Math.random(),
-                nickname: "fulano de tal",
-                email: "a@a.com",
-                image: require("../../assets/imgs/fence.jpg"),
-                comments: [
-                    { nickname: "beltrano de tal", comment: "Legal" },
-                    { nickname: "ciclano de tal", comment: "Legal tal" }
-                ]
-            },
-            {
-                id: Math.random(),
-                nickname: "fulano de tal",
-                email: "a@a.com",
-                image: require("../../assets/imgs/bw.jpg"),
-                comments: [
-                    { nickname: "beltrano de tal", comment: "Legal" },
-                    { nickname: "ciclano de tal", comment: "Legal tal" }
-                ]
-            }
-        ]
-    }
+ 
 
     render() {
+        // Obtém os posts das props passadas pelo Redux
+        const { posts } = this.props;
+
         return (
             <View style={styles.container}>
                 <Header />
                 <FlatList
-                    data={this.state.posts}
+                    data={this.props.posts}
                     keyExtractor={item => `${item.id}`}
                     renderItem={({ item }) => <Post {...item} />}
                 />
             </View>
-        )
+        );
     }
 }
 
@@ -52,4 +34,17 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Feed;
+
+/*const mapStateToProps = state => {
+    return {
+        posts: state.posts.posts // Corrigindo para acessar corretamente o array
+    };
+};*/
+
+const mapStateToProps = ({posts}) => {
+    return {
+        posts: posts.posts // Corrigindo para acessar corretamente o array  
+    };
+}
+
+export default connect(mapStateToProps)(Feed);

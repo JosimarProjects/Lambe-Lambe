@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { addPost } from "../store/actions/posts";
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, Platform, ScrollView, Alert, PermissionsAndroid } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -40,16 +42,16 @@ class AddPhoto extends Component {
             maxHeight: 600,
             maxWidth: 800,
             saveToPhotos: true
-        }, 
-        (response) => {
-            if (response.didCancel) {
-                Alert.alert('Ação cancelada', 'Você cancelou a captura da foto.');
-            } else if (response.errorCode) {
-                Alert.alert('Erro', `Erro ao acessar a câmera: ${response.errorMessage}`);
-            } else {
-                this.setState({ image: { uri: response.assets[0].uri } });
-            }
-        });
+        },
+            (response) => {
+                if (response.didCancel) {
+                    Alert.alert('Ação cancelada', 'Você cancelou a captura da foto.');
+                } else if (response.errorCode) {
+                    Alert.alert('Erro', `Erro ao acessar a câmera: ${response.errorMessage}`);
+                } else {
+                    this.setState({ image: { uri: response.assets[0].uri } });
+                }
+            });
     }
 
     pickImageFromGallery = () => {
@@ -57,25 +59,35 @@ class AddPhoto extends Component {
             mediaType: 'photo',
             maxHeight: 600,
             maxWidth: 800
-        }, 
-        (response) => {
-            if (response.didCancel) {
-                Alert.alert('Ação cancelada', 'Você cancelou a seleção da foto.');
-            } else if (response.errorCode) {
-                Alert.alert('Erro', `Erro ao acessar a galeria: ${response.errorMessage}`);
-            } else {
-                this.setState({ image: { uri: response.assets[0].uri } });
-            }
-        });
+        },
+            (response) => {
+                if (response.didCancel) {
+                    Alert.alert('Ação cancelada', 'Você cancelou a seleção da foto.');
+                } else if (response.errorCode) {
+                    Alert.alert('Erro', `Erro ao acessar a galeria: ${response.errorMessage}`);
+                } else {
+                    this.setState({ image: { uri: response.assets[0].uri } });
+                }
+            });
     }
 
-    save = async () => {
-        const { image, comment } = this.state;
-        if (image) {
-            Alert.alert('Foto salva com sucesso!', comment);
-        } else {
-            Alert.alert('Erro', 'Nenhuma foto selecionada.');
-        }
+    save = async () => { 
+        console.warn(this.props.name);       
+
+        this.props.onAddPost({
+            id: Math.random(),
+            nickname: this.props.name,
+            email: this.props.email,
+            image: this.state.image,
+            comments: [
+                { nickname: this.props.name, comment: this.state.comment }
+            ]
+
+        })
+
+        this.setState({ image: null, comment: '' })
+        this.props.navigation.navigate('Feed');
+
     }
 
     render() {
@@ -163,4 +175,20 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddPhoto;
+//export default AddPhoto;
+
+const mapStateToProps = ({ user }) => {
+    return {
+        name: user.name,
+        email: user.email
+    }
+   
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAddPost: post => dispatch(addPost(post))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPhoto);
