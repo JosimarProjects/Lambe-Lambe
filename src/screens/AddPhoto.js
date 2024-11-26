@@ -5,6 +5,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, Platform, 
 import { TextInput } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
+const noUser = "Voce precisa estar logado para adicionar fotos.";
+
 class AddPhoto extends Component {
     state = {
         image: null,
@@ -31,6 +33,10 @@ class AddPhoto extends Component {
     }
 
     pickImageFromCamera = async () => {
+        if(!this.props.name) {
+            Alert.alert('Permissão negada', noUser);
+            return
+        }
         const hasPermission = await this.requestCameraPermission();
         if (!hasPermission) {
             Alert.alert('Permissão negada', 'Não foi possível acessar a câmera.');
@@ -55,6 +61,10 @@ class AddPhoto extends Component {
     }
 
     pickImageFromGallery = () => {
+        if(!this.props.name) {
+            Alert.alert('Permissão negada', noUser);
+            return
+        }
         launchImageLibrary({
             mediaType: 'photo',
             maxHeight: 600,
@@ -72,6 +82,11 @@ class AddPhoto extends Component {
     }
 
     save = async () => { 
+
+        if(!this.props.name) {
+            Alert.alert('Permissão negada', noUser);
+            return
+        }
         console.warn(this.props.name);       
 
         this.props.onAddPost({

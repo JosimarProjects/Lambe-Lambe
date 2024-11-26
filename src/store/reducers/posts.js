@@ -1,4 +1,4 @@
-import { ADD_POST } from "../actions/actionTypes";
+import { ADD_POST, ADD_COMMENT } from "../actions/actionTypes";
 
 const initialState = {
     posts: [
@@ -33,12 +33,26 @@ const reducer = (state = initialState, action) => {
                 posts: state.posts.concat({
                     ...action.payload
                 })
-                
-            }
+            };
+        case ADD_COMMENT:
+            return {
+                ...state,
+                posts: state.posts.map(post => {
+                    if (post.id === action.payload.postId) {
+                        return {
+                            ...post,
+                            comments: post.comments 
+                                ? post.comments.concat(action.payload.comment) 
+                                : [action.payload.comment]
+                        };
+                    }
+                    return post;
+                })
+            };
         default:
-            return state
-        }
-}
+            return state;
+    }
+};
 
 
 
